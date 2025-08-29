@@ -15,7 +15,3 @@ GO
 
 USE CityTrafficDB;
 
-
-CREATE TABLE TrafficAccidents (
-
-);
