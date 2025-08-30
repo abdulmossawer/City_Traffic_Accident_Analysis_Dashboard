@@ -55,7 +55,10 @@ ORDER BY TotalAccidentByMonth DESC;
 
 -- Accidents by Road Surface
 SELECT
-	Road_Surface_Conditions,
+CASE
+	WHEN TRIM(Road_Surface_Conditions) IS NULL THEN 'Unknown'
+	ELSE Road_Surface_Conditions
+	END AS Road_Surface_Conditions,
 	COUNT(*) AS SurfaceConditions
 FROM RoadAccidents
 GROUP BY Road_Surface_Conditions
@@ -64,7 +67,10 @@ ORDER BY SurfaceConditions DESC;
 
 -- Weather Impact on Fatal Accidents
 SELECT
-	Weather_Conditions,
+CASE
+	WHEN TRIM(Weather_Conditions) IS NULL THEN 'Unknown'
+	ELSE Weather_Conditions
+	END AS Weather_Conditions,
 	COUNT(*) FatalAcc
 FROM RoadAccidents
 WHERE Accident_Severity = 'Fatal'
