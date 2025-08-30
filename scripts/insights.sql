@@ -58,7 +58,7 @@ SELECT
 CASE
 	WHEN TRIM(Road_Surface_Conditions) IS NULL THEN 'Unknown'
 	ELSE Road_Surface_Conditions
-	END AS Road_Surface_Conditions,
+END AS Road_Surface_Conditions,
 	COUNT(*) AS SurfaceConditions
 FROM RoadAccidents
 GROUP BY Road_Surface_Conditions
@@ -70,7 +70,7 @@ SELECT
 CASE
 	WHEN TRIM(Weather_Conditions) IS NULL THEN 'Unknown'
 	ELSE Weather_Conditions
-	END AS Weather_Conditions,
+END AS Weather_Conditions,
 	COUNT(*) FatalAcc
 FROM RoadAccidents
 WHERE Accident_Severity = 'Fatal'
@@ -106,6 +106,15 @@ GROUP BY Accident_Severity,Vehicle_Type
 ORDER BY Total DESC
 
 
+-- Average Casualties by Vehicle Type
+SELECT
+	Vehicle_Type,
+	AVG(TRY_CAST(Number_of_Casualties AS FLOAT)) AS AvgCasualties
+FROM RoadAccidents
+GROUP BY Vehicle_Type
+ORDER BY AvgCasualties DESC;
+
+
 -- Accidents by Region
 SELECT
 	Urban_or_Rural_Area,
@@ -123,3 +132,69 @@ FROM RoadAccidents
 GROUP BY Local_Authority_District
 ORDER BY Total DESC;
 
+
+-- Accidents by Speed Limit
+SELECT 
+	Speed_limit,
+	COUNT(*) TotalAcc
+FROM RoadAccidents
+GROUP BY Speed_limit
+ORDER BY TotalAcc DESC;
+
+SELECT 
+	AVG(Speed_limit) AvgSpeed
+FROM RoadAccidents;
+
+
+-- Accidents on Road Type
+SELECT
+CASE
+	WHEN TRIM(Road_Type) IS NULL THEN 'Unknown'
+	ELSE Road_Type
+END AS Road_Type,
+	COUNT(*) AS TotalAcc
+FROM RoadAccidents
+GROUP BY Road_Type
+ORDER BY TotalAcc DESC;
+
+
+-- Peak Accident Hours
+SELECT 
+    DATEPART(HOUR, Time) AS HourOfDay,
+    COUNT(*) AS TotalAccidents
+FROM RoadAccidents
+WHERE Time IS NOT NULL
+GROUP BY DATEPART(HOUR, TRY_CAST(Time AS TIME))
+ORDER BY TotalAccidents DESC;
+
+
+-- Day vs Night Accidents
+SELECT
+CASE
+	WHEN DATEPART(HOUR, Time) BETWEEN 6 AND 18 THEN 'Day'
+	ELSE 'Night'
+END TimeOfDay,
+	COUNT(*) AS TotalAccidents
+FROM RoadAccidents
+WHERE Time IS NOT NULL
+GROUP BY DATEPART(HOUR, Time)
+ORDER BY TotalAccidents DESC;
+
+
+-- Accidents Hotspots by Lat/Long
+SELECT 
+	Latitude,
+	Longitude,
+	COUNT(*) AS TotalAccidents
+FROM RoadAccidents
+GROUP BY Latitude, Longitude
+ORDER BY TotalAccidents DESC;
+
+
+-- Fatality Rate per Year
+SELECT 
+    YEAR(AccidentDate) AS AccYear,
+    SUM(CASE WHEN Accident_Severity = 'Fatal' THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS FatalityRate
+FROM RoadAccidents
+GROUP BY YEAR(AccidentDate)
+ORDER BY FatalityRate DESC;
