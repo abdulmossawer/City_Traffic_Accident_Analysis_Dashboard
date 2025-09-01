@@ -31,7 +31,7 @@ The dashboard enables:
 ### 📍 Home Dashboard  
 ![Home](https://github.com/abdulmossawer/City_Traffic_Accident_Analysis_Dashboard/blob/main/dashboard/Screenshots/Home.png)  
 
-### 📍 Next Dashboard View  
+### 📍 Next Page Dashboard View  
 ![Next](https://github.com/abdulmossawer/City_Traffic_Accident_Analysis_Dashboard/blob/main/dashboard/Screenshots/Next.png)  
 
 ---
